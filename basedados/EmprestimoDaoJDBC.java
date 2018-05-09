@@ -11,7 +11,7 @@ import beans.Livro;
 import beans.Usuario;
 import utilidades.Log;
 
-public class EmprestimoDaoJDBC  extends ConectorJDBC implements EmprestimoDAO {
+public class EmprestimoDaoJDBC  extends DTOclasse implements EmprestimoDAO {
 	
 	protected EmprestimoDaoJDBC(DB db) throws BaseDadosException {
 		super(db);
@@ -197,29 +197,5 @@ public class EmprestimoDaoJDBC  extends ConectorJDBC implements EmprestimoDAO {
 	public void alteraEmprestimo(Emprestimo emprestimoAlterado) throws BaseDadosException {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	protected String getDbHost() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected String getDbName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected String getUser() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected String getPassword() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

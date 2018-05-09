@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import beans.Usuario;
 import utilidades.Log;
 
-public class UsuarioDaoJDBC extends ConectorJDBC implements UsuarioDAO { 
+public class UsuarioDaoJDBC extends DTOclasse implements UsuarioDAO { 
 	//CRIOU CONSTRUTOR AUTOMATICO
 	protected UsuarioDaoJDBC(DB db) throws BaseDadosException {
 		super(db);
@@ -79,23 +79,5 @@ public class UsuarioDaoJDBC extends ConectorJDBC implements UsuarioDAO {
 		}
 		fechaConexao();
 		return usuarios;
-	}
-
-	@Override
-	protected String getDbHost() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected String getDbName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected String getPassword() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
