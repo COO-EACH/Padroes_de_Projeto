@@ -80,4 +80,22 @@ public class UsuarioDaoJDBC extends ConectorJDBC implements UsuarioDAO {
 		fechaConexao();
 		return usuarios;
 	}
+
+	@Override
+	protected String getDbHost() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected String getDbName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected String getPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
