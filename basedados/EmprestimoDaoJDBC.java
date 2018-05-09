@@ -193,9 +193,7 @@ public class EmprestimoDaoJDBC  extends DTOclasse implements EmprestimoDAO {
 		return emprestimos;
 	}
 
-	@Override
-	public void alteraEmprestimo(Emprestimo emprestimoAlterado) throws BaseDadosException {
-		// TODO Auto-generated method stub
-		
+	public void alteraEmprestimo(Emprestimo emprestimoAlterado)
+			throws BaseDadosException {
 	}
 }

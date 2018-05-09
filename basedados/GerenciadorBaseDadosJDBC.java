@@ -52,25 +52,6 @@ public class GerenciadorBaseDadosJDBC extends ConectorJDBC implements Gerenciado
 		return jaCriouBD ? DB_NAME : "";
 	}
 
-	private void insereItem(Item item) throws BaseDadosException {
-		abreConexao();
-		preparaComandoSQL("insert into Item (qtdTotalExemplares, qtdExemplaresDisponiveis, qtdExemplaresEmprestados, codigo) values (?, ?, ?, ?)");
-
-		try {
-			pstmt.setInt(1, item.getQtdTotalExemplares());
-			pstmt.setInt(2, item.getQtdExemplaresDisponiveis());
-			pstmt.setInt(3, item.getQtdExemplaresEmprestados());
-			pstmt.setInt(4, item.getCodigo());
-			pstmt.execute();
-		} catch (SQLException e) {
-			Log.gravaLog(e);
-			throw new BaseDadosException(
-					"Erro ao setar os parâmetros da consulta.");
-		}
-
-		fechaConexao();
-	}
-
 	public void insereLivro(Livro livro) throws BaseDadosException {
 		insereItem(livro);
 		abreConexao();
@@ -107,110 +88,6 @@ public class GerenciadorBaseDadosJDBC extends ConectorJDBC implements Gerenciado
 		}
 
 		fechaConexao();
-	}
-
-	public Item buscaItem(int codigo) throws BaseDadosException {
-		abreConexao();
-		preparaComandoSQL("select qtdTotalExemplares, qtdExemplaresDisponiveis, qtdExemplaresEmprestados from Item where codigo="
-				+ codigo);
-		Item item = null;
-
-		try {
-			rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				int qtdTotalExemplares = rs.getInt(1);
-				int qtdExemplaresDisponiveis = rs.getInt(2);
-				int qtdExemplaresEmprestados = rs.getInt(3);
-				item = new Item(qtdTotalExemplares, qtdExemplaresDisponiveis,
-						qtdExemplaresEmprestados, codigo);
-			}
-		} catch (SQLException e) {
-			Log.gravaLog(e);
-			throw new BaseDadosException(
-					"Problemas ao ler o resultado da consulta.");
-		}
-
-		fechaConexao();
-		return item;
-	}
-
-	public CD buscaCD(int codigo) throws BaseDadosException {
-		abreConexao();
-		preparaComandoSQL("select artista, album from CD where codigo="
-				+ codigo);
-		CD cd = null;
-
-		try {
-			rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				String artista = rs.getString(1);
-				String album = rs.getString(2);
-				cd = new CD(album, artista, buscaItem(codigo));
-			}
-		} catch (SQLException e) {
-			Log.gravaLog(e);
-			throw new BaseDadosException(
-					"Problemas ao ler o resultado da consulta.");
-		}
-
-		fechaConexao();
-		return cd;
-	}
-
-	public Livro buscaLivro(int codigo) throws BaseDadosException {
-		abreConexao();
-		preparaComandoSQL("select autores, titulo from Livro where codigo="
-				+ codigo);
-		Livro livro = null;
-
-		try {
-			rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				String autores = rs.getString(1);
-				String titulo = rs.getString(2);
-				livro = new Livro(autores, titulo, buscaItem(codigo));
-			}
-		} catch (SQLException e) {
-			Log.gravaLog(e);
-			throw new BaseDadosException(
-					"Problemas ao ler o resultado da consulta.");
-		}
-
-		fechaConexao();
-		return livro;
-	}
-
-	private LinkedList<Item> listaItens() throws BaseDadosException {
-		LinkedList<Item> itens = new LinkedList<Item>();
-		abreConexao();
-		preparaComandoSQL("select codigo, " + "qtdExemplaresDisponiveis, "
-				+ "qtdExemplaresEmprestados, " + "qtdTotalExemplares "
-				+ "from Item");
-
-		try {
-			rs = pstmt.executeQuery();
-
-			while (rs.next()) {
-				int codigo = rs.getInt(1);
-				int qtdExemplaresDisponiveis = rs.getInt(2);
-				int qtdExemplaresEmprestados = rs.getInt(3);
-				int qtdTotalExemplares = rs.getInt(4);
-				Item item = new Item(qtdTotalExemplares,
-						qtdExemplaresDisponiveis, qtdExemplaresEmprestados,
-						codigo);
-				itens.add(item);
-			}
-		} catch (SQLException e) {
-			Log.gravaLog(e);
-			throw new BaseDadosException(
-					"Problemas ao ler o resultado da consulta.");
-		}
-
-		fechaConexao();
-		return itens;
 	}
 
 	public LinkedList<Livro> listaLivros() throws BaseDadosException {
@@ -269,12 +146,6 @@ public class GerenciadorBaseDadosJDBC extends ConectorJDBC implements Gerenciado
 
 		fechaConexao();
 		return cds;
-	}
-
-
-
-	public void alteraEmprestimo(Emprestimo emprestimoAlterado)
-			throws BaseDadosException {
 	}
 
 	private void criaTabelaEmprestimo() throws SQLException, BaseDadosException {
