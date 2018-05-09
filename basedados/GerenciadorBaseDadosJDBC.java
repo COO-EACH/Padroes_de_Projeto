@@ -12,11 +12,9 @@ import beans.Item;
 import beans.Livro;
 import beans.Usuario;
 
-public class GerenciadorBaseDadosJDBC extends ConectorJDBC implements
-		GerenciadorBaseDados {
+public class GerenciadorBaseDadosJDBC extends ConectorJDBC implements GerenciadorBaseDados {
 
 	private static final String PASSWORD = "";
-	private static final String USER = "root";
 	private static final String HOST = "localhost";
 	private static final String DB_NAME = "coo2018";
 	private boolean jaCriouBD;
@@ -37,10 +35,6 @@ public class GerenciadorBaseDadosJDBC extends ConectorJDBC implements
 			throw new BaseDadosException(
 					"Erro ao tentar criar o banco de dados.");
 		}
-	}
-
-	protected String getUser() {
-		return USER;
 	}
 
 	@Override
@@ -67,23 +61,6 @@ public class GerenciadorBaseDadosJDBC extends ConectorJDBC implements
 			pstmt.setInt(2, item.getQtdExemplaresDisponiveis());
 			pstmt.setInt(3, item.getQtdExemplaresEmprestados());
 			pstmt.setInt(4, item.getCodigo());
-			pstmt.execute();
-		} catch (SQLException e) {
-			Log.gravaLog(e);
-			throw new BaseDadosException(
-					"Erro ao setar os parâmetros da consulta.");
-		}
-
-		fechaConexao();
-	}
-
-	public void insereUsuario(Usuario usuario) throws BaseDadosException {
-		abreConexao();
-		preparaComandoSQL("insert into Usuario (nome, codigo) values (?, ?)");
-
-		try {
-			pstmt.setString(1, usuario.getNome());
-			pstmt.setInt(2, usuario.getCodigo());
 			pstmt.execute();
 		} catch (SQLException e) {
 			Log.gravaLog(e);
@@ -122,28 +99,6 @@ public class GerenciadorBaseDadosJDBC extends ConectorJDBC implements
 			pstmt.setString(1, cd.getArtista());
 			pstmt.setString(2, cd.getAlbum());
 			pstmt.setInt(3, cd.getCodigo());
-			pstmt.execute();
-		} catch (SQLException e) {
-			Log.gravaLog(e);
-			throw new BaseDadosException(
-					"Erro ao setar os parâmetros da consulta.");
-		}
-
-		fechaConexao();
-	}
-
-	public void insereEmprestimo(Emprestimo emprestimo)
-			throws BaseDadosException {
-		abreConexao();
-
-		try {
-			preparaComandoSQL("insert into Emprestimo (codigoItem, codigoUsuario, finalizado) values (?, ?, ?)");
-			pstmt.setInt(1, emprestimo.getItem().getCodigo());
-			pstmt.setInt(2, emprestimo.getUsuario().getCodigo());
-			pstmt.setBoolean(3, false);
-			pstmt.execute();
-			preparaComandoSQL("update Item set qtdExemplaresDisponiveis = qtdExemplaresDisponiveis - 1, qtdExemplaresEmprestados = qtdExemplaresEmprestados + 1 where codigo = ?");
-			pstmt.setInt(1, emprestimo.getItem().getCodigo());
 			pstmt.execute();
 		} catch (SQLException e) {
 			Log.gravaLog(e);
@@ -226,51 +181,6 @@ public class GerenciadorBaseDadosJDBC extends ConectorJDBC implements
 
 		fechaConexao();
 		return livro;
-	}
-
-	public Usuario buscaUsuario(int codigo) throws BaseDadosException {
-		abreConexao();
-		preparaComandoSQL("select nome from Usuario where codigo=" + codigo);
-		Usuario usuario = null;
-
-		try {
-			rs = pstmt.executeQuery();
-
-			if (rs.next()) {
-				String nome = rs.getString(1);
-				usuario = new Usuario(nome, codigo);
-			}
-		} catch (SQLException e) {
-			Log.gravaLog(e);
-			throw new BaseDadosException(
-					"Problemas ao ler o resultado da consulta.");
-		}
-
-		fechaConexao();
-		return usuario;
-	}
-
-	public LinkedList<Usuario> listaUsuarios() throws BaseDadosException {
-		LinkedList<Usuario> usuarios = new LinkedList<Usuario>();
-		abreConexao();
-		preparaComandoSQL("select codigo, nome from Usuario");
-
-		try {
-			rs = pstmt.executeQuery();
-
-			while (rs.next()) {
-				int codigo = rs.getInt(1);
-				String nome = rs.getString(2);
-				Usuario usuario = new Usuario(nome, codigo);
-				usuarios.add(usuario);
-			}
-		} catch (SQLException e) {
-			Log.gravaLog(e);
-			throw new BaseDadosException(
-					"Problemas ao ler o resultado da consulta.");
-		}
-		fechaConexao();
-		return usuarios;
 	}
 
 	private LinkedList<Item> listaItens() throws BaseDadosException {
@@ -361,56 +271,10 @@ public class GerenciadorBaseDadosJDBC extends ConectorJDBC implements
 		return cds;
 	}
 
-	@Override
-	public LinkedList<Emprestimo> listaEmprestimosEmAbertoDoUsuario(
-			Usuario usuario) throws BaseDadosException {
-		LinkedList<Emprestimo> emprestimos = new LinkedList<Emprestimo>();
-		abreConexao();
 
-		try {
-			preparaComandoSQL("select codigoEmprestimo, codigoItem from Emprestimo where finalizado=? and codigoUsuario=?");
-			pstmt.setBoolean(1, false);
-			pstmt.setInt(2, usuario.getCodigo());
-			rs = pstmt.executeQuery();
-			ArrayList<Integer> codigoItens = new ArrayList<Integer>();
-
-			while (rs.next()) {
-				int codigoEmprestimo = rs.getInt(1);
-				int codigoItem = rs.getInt(2);
-				Emprestimo emprestimo = new Emprestimo(null, usuario,
-						codigoEmprestimo);
-				emprestimos.add(emprestimo);
-				codigoItens.add(codigoItem);
-			}
-
-			int index = 0;
-
-			for (Emprestimo emprestimo : emprestimos) {
-				CD cd = buscaCD(codigoItens.get(index));
-				if (cd != null) {
-					emprestimo.setItem(cd);
-				} else {
-					Livro livro = buscaLivro(codigoItens.get(index));
-					emprestimo.setItem(livro);
-				}
-				index++;
-			}
-		} catch (SQLException e) {
-			Log.gravaLog(e);
-			throw new BaseDadosException(
-					"Problemas ao ler o resultado da consulta.");
-		}
-		fechaConexao();
-		return emprestimos;
-	}
 
 	public void alteraEmprestimo(Emprestimo emprestimoAlterado)
 			throws BaseDadosException {
-	}
-
-	public Emprestimo buscaEmprestimo(int codigoEmprestimo)
-			throws BaseDadosException {
-		return null;
 	}
 
 	private void criaTabelaEmprestimo() throws SQLException, BaseDadosException {
