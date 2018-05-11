@@ -1,11 +1,11 @@
 package basedados;
 
 import java.sql.SQLException;
-import basedados.DTOclasse;
+import basedados.ConectorDaoJDBC;
 import beans.Item;
 import utilidades.Log;
 
-public class ItemDaoJDBC extends DTOclasse implements ItemDAO {
+public class ItemDaoJDBC extends ConectorDaoJDBC implements ItemDAO {
 
 	protected ItemDaoJDBC(DB db) throws BaseDadosException {
 		super(db);

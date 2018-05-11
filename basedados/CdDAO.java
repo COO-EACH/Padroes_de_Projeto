@@ -4,7 +4,7 @@ import java.util.List;
 
 import beans.CD;
 
-public interface CdDAO {
+public interface CdDAO{
 	
 	public void insereCD(CD cd) throws BaseDadosException;
 

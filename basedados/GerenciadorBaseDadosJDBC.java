@@ -14,11 +14,6 @@ import beans.Usuario;
 
 public class GerenciadorBaseDadosJDBC extends ConectorJDBC implements GerenciadorBaseDados {
 
-	private static final String PASSWORD = "";
-	private static final String HOST = "localhost";
-	private static final String DB_NAME = "coo2018";
-	private boolean jaCriouBD;
-
 	public GerenciadorBaseDadosJDBC() throws BaseDadosException {
 		super(DB.MYSQL);
 
@@ -37,20 +32,7 @@ public class GerenciadorBaseDadosJDBC extends ConectorJDBC implements Gerenciado
 		}
 	}
 
-	@Override
-	protected String getPassword() {
-		return PASSWORD;
-	}
-
-	@Override
-	protected String getDbHost() {
-		return HOST;
-	}
-
-	@Override
-	protected String getDbName() {
-		return jaCriouBD ? DB_NAME : "";
-	}
+	
 
 	public void insereLivro(Livro livro) throws BaseDadosException {
 		insereItem(livro);

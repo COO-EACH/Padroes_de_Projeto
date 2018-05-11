@@ -1,9 +1,14 @@
-package basedados;
+package basededados.DAO.JDBC;
 
 import java.sql.SQLException;
+//import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import basedados.BaseDadosException;
+import basedados.ConectorDaoJDBC;
+//import basedados.ConectorJDBC.DB;
+import basededados.DAO.EmprestimoDAO;
 import beans.CD;
 import beans.Emprestimo;
 import beans.Item;
@@ -11,13 +16,13 @@ import beans.Livro;
 import beans.Usuario;
 import utilidades.Log;
 
-public class EmprestimoDaoJDBC  extends DTOclasse implements EmprestimoDAO {
+public class EmprestimoDaoJDBC  extends ConectorDaoJDBC implements EmprestimoDAO {
 	
 	protected EmprestimoDaoJDBC(DB db) throws BaseDadosException {
 		super(db);
 		// TODO Auto-generated constructor stub
 	}
-	
+	/*
 	private LinkedList<Item> listaItens() throws BaseDadosException {
 		LinkedList<Item> itens = new LinkedList<Item>();
 		abreConexao();
@@ -47,7 +52,7 @@ public class EmprestimoDaoJDBC  extends DTOclasse implements EmprestimoDAO {
 		fechaConexao();
 		return itens;
 	}
-	
+	*/
 	public Item buscaItem(int codigo) throws BaseDadosException {
 		abreConexao();
 		preparaComandoSQL("select qtdTotalExemplares, qtdExemplaresDisponiveis, qtdExemplaresEmprestados from Item where codigo="
@@ -123,12 +128,12 @@ public class EmprestimoDaoJDBC  extends DTOclasse implements EmprestimoDAO {
 	}
 
 
-	public Emprestimo buscaEmprestimo(int codigoEmprestimo)
+	public Emprestimo busca(int codigoEmprestimo)
 			throws BaseDadosException {
 		return null;
 	}
 	
-	public void insereEmprestimo(Emprestimo emprestimo)
+	public void insere(Emprestimo emprestimo)
 			throws BaseDadosException {
 		abreConexao();
 
@@ -193,7 +198,7 @@ public class EmprestimoDaoJDBC  extends DTOclasse implements EmprestimoDAO {
 		return emprestimos;
 	}
 
-	public void alteraEmprestimo(Emprestimo emprestimoAlterado)
+	public void altera(Emprestimo emprestimoAlterado)
 			throws BaseDadosException {
 	}
 }

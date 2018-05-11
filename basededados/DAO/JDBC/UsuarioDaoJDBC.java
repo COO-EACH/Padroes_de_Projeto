@@ -1,25 +1,25 @@
-package basedados;
+package basededados.DAO.JDBC;
 
 import java.sql.SQLException;
+//import java.sql.SQLException;
 import java.util.LinkedList;
 
+import basedados.BaseDadosException;
+import basedados.ConectorJDBC;
+import basedados.ConectorDaoJDBC;
+//import basedados.ConectorJDBC.DB;
+import basededados.DAO.UsuarioDAO;
 import beans.Usuario;
 import utilidades.Log;
 
-public class UsuarioDaoJDBC extends DTOclasse implements UsuarioDAO { 
+public class UsuarioDaoJDBC extends ConectorDaoJDBC implements UsuarioDAO { 
 	//CRIOU CONSTRUTOR AUTOMATICO
 	protected UsuarioDaoJDBC(DB db) throws BaseDadosException {
 		super(db);
 		// TODO Auto-generated constructor stub
 	}
-
-	private static final String USER = "root";
 	
-	protected String getUser() {
-		return USER;
-	}
-	
-	public void insereUsuario(Usuario usuario) throws BaseDadosException {
+	public void insere(Usuario usuario) throws BaseDadosException {
 		abreConexao();
 		preparaComandoSQL("insert into Usuario (nome, codigo) values (?, ?)");
 
@@ -36,7 +36,7 @@ public class UsuarioDaoJDBC extends DTOclasse implements UsuarioDAO {
 		fechaConexao();
 	}
 	
-	public Usuario buscaUsuario(int codigo) throws BaseDadosException {
+	public Usuario busca(int codigo) throws BaseDadosException {
 		abreConexao();
 		preparaComandoSQL("select nome from Usuario where codigo=" + codigo);
 		Usuario usuario = null;
@@ -58,7 +58,7 @@ public class UsuarioDaoJDBC extends DTOclasse implements UsuarioDAO {
 		return usuario;
 	}
 	
-	public LinkedList<Usuario> listaUsuarios() throws BaseDadosException {
+	public LinkedList<Usuario> lista() throws BaseDadosException {
 		LinkedList<Usuario> usuarios = new LinkedList<Usuario>();
 		abreConexao();
 		preparaComandoSQL("select codigo, nome from Usuario");
@@ -80,4 +80,16 @@ public class UsuarioDaoJDBC extends DTOclasse implements UsuarioDAO {
 		fechaConexao();
 		return usuarios;
 	}
+	
+	/* EXEMPLO DE AULA
+	 * 
+	 * public void insere(Usuario u){
+	 * 	//code
+	 * };
+	 * 
+	 * public Usuario busca(int id){
+	 * 	//code
+	 * };
+	 * 
+	 * */
 }
