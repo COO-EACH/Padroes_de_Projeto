@@ -13,6 +13,7 @@ import basedados.dao.jdbc.EmprestimoDaoJdbc;
 import basedados.dao.jdbc.ItemDaoJdbc;
 import basedados.dao.jdbc.LivroDaoJdbc;
 import basedados.dao.jdbc.UsuarioDaoJdbc;
+import basededados.DAO.DaoAbstractFactory;
 import beans.CD;
 import beans.Emprestimo;
 import beans.Item;
@@ -33,6 +34,15 @@ public class GerenciadorRegrasNegocio {
 		this.bd = bd;
 		if (this.bd == BaseDados.JDBC) {
 			try {
+				DaoAbstractFactory daoFactory = new DaoJdbcFactory();
+				//ou:
+				//DaoAbstractFactory daoFactory =(DaoAbstractFactory) Class.forName("basedados.dao.jdbc.DaoJdbcFactory");
+				usuarioDao = daoFactory.createUsuario();
+				ItemDao itemDao = daoFactory.createItemDao();
+				cdDao = daoFactory.createCdDao();
+				livroDao = daoFactory.createLivroDao();
+				emprestimoDao = daoFactory.createEmprestimoDao(usuarioDao, cdDao, livroDao);
+				
 				//instanciar dos DAOs
 				usuarioDao = new UsuarioDaoJdbc();
 				ItemDao itemDao = new ItemDaoJdbc();
@@ -54,6 +64,7 @@ public class GerenciadorRegrasNegocio {
 			throws NegocioException {
 		Usuario usuario = new Usuario(nome, codigo);
 		try {
+			//usuarioDao.insere(usuario);
 			gerenciadorBaseDados.insereUsuario(usuario);
 		} catch (BaseDadosException e) {
 			Log.gravaLog(e);
