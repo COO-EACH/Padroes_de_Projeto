@@ -1,7 +1,11 @@
-package basedados;
+package basededados.DAO.JDBC;
 
 import java.sql.SQLException;
-import basedados.ConectorDaoJDBC;
+
+import basedados.BaseDadosException;
+import basedados.ConectorJDBC;
+import basedados.ConectorJDBC.DB;
+import basededados.DAO.ItemDAO;
 import beans.Item;
 import utilidades.Log;
 

@@ -1,7 +1,8 @@
-package basedados;
+package basededados.DAO;
 
 import java.util.List;
 
+import basedados.BaseDadosException;
 import beans.CD;
 
 public interface CdDAO{

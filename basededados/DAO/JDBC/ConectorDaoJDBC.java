@@ -1,4 +1,8 @@
-package basedados;
+package basededados.DAO.JDBC;
+
+import basedados.BaseDadosException;
+import basedados.ConectorJDBC;
+import basedados.ConectorJDBC.DB;
 
 public class ConectorDaoJDBC extends ConectorJDBC{
 	

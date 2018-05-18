@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import basedados.BaseDadosException;
-import basedados.ConectorDaoJDBC;
 //import basedados.ConectorJDBC.DB;
 import basededados.DAO.EmprestimoDAO;
 import beans.CD;

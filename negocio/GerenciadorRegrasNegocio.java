@@ -7,6 +7,12 @@ import utilidades.Log;
 import basedados.BaseDadosException;
 import basedados.GerenciadorBaseDados;
 import basedados.GerenciadorBaseDadosJDBC;
+import basedados.dao.ItemDao;
+import basedados.dao.jdbc.CdDaoJdbc;
+import basedados.dao.jdbc.EmprestimoDaoJdbc;
+import basedados.dao.jdbc.ItemDaoJdbc;
+import basedados.dao.jdbc.LivroDaoJdbc;
+import basedados.dao.jdbc.UsuarioDaoJdbc;
 import beans.CD;
 import beans.Emprestimo;
 import beans.Item;
@@ -27,6 +33,14 @@ public class GerenciadorRegrasNegocio {
 		this.bd = bd;
 		if (this.bd == BaseDados.JDBC) {
 			try {
+				//instanciar dos DAOs
+				usuarioDao = new UsuarioDaoJdbc();
+				ItemDao itemDao = new ItemDaoJdbc();
+				cdDao = new CdDaoJdbc(itemDao);
+				livroDao = new LivroDaoJdbc(itemDao);
+				emprestimoDao = new EmprestimoDaoJdbc(usuarioDao, cdDao,
+						livroDao);
+				
 				gerenciadorBaseDados = new GerenciadorBaseDadosJDBC();
 			} catch (BaseDadosException e) {
 				throw new NegocioException(e);
